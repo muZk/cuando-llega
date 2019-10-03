@@ -1,8 +1,14 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { distance } from './utils'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { distance, sort } from './utils';
 
-function ArrivalsResult ({ arrivals }) {
+function ArrivalsResult({ arrivals, sortColumn }) {
+  const [values, set] = useState([]);
+
+  useEffect(() => {
+    set(sort(arrivals, sortColumn));
+  }, [sortColumn]);
+
   return (
     <table>
       <thead>
@@ -15,7 +21,7 @@ function ArrivalsResult ({ arrivals }) {
         </tr>
       </thead>
       <tbody>
-        {arrivals.map(arrival => (
+        {values.map(arrival => (
           <tr key={arrival['bus_plate_number'] || arrival['route_id']}>
             <td>
               <code>{arrival.route_id}</code>
@@ -30,7 +36,7 @@ function ArrivalsResult ({ arrivals }) {
         ))}
       </tbody>
     </table>
-  )
+  );
 }
 
 ArrivalsResult.propTypes = {
@@ -41,6 +47,6 @@ ArrivalsResult.propTypes = {
       bus_plate_number: PropTypes.string
     })
   ).isRequired
-}
+};
 
-export default ArrivalsResult
+export default ArrivalsResult;
